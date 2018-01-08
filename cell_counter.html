@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Cell Counter</title>
+    <link rel="stylesheet" href="./StyleSheet/fung.css">
+    <style type="text/css" id="current_style">
+        .selected_cell {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript" src="./JavaScript/vue.js"></script>
+
+<div id="content">
+
+    <h1>Cell Counter</h1>
+
+    <div class="user_input_area">
+
+        <span class="input_title">Rows:</span>
+        <input class="user_input" type="number" v-model="inputedRows" value="inputedRows" @keyup.enter="createCells">
+
+        <br>
+
+        <span class="input_title">Columns:</span>
+        <input class="user_input" type="number" v-model="inputedColumns" value="inputedColumns"
+               @keyup.enter="createCells">
+
+        <br>
+
+        <button @click="createCells">Create!</button>
+        <button @click="clearInput">Clear!</button>
+        <button @click="countCell">Count!</button>
+
+        <br>
+
+        <span>Color: </span><input type="text" value="lightgray" v-model="currentColor" @change="changeSelectedColor">
+
+        <br>
+
+        <span>Number: {{countNumber}}</span>
+
+        <br>
+
+        <span>Selected Cells: </span>
+
+    </div>
+
+    <div class="cells_area">
+        <table class="cells_table">
+            <tr>
+                <td v-if="currentColumns!=0">0</td>
+                <td v-for="n in currentColumns">{{n}}</td>
+            </tr>
+            <tr v-for="row in currentRows">
+                <td>{{row}}</td>
+                <td class="cell" v-for="column in currentColumns" :col="column" :row="row" :class="{ selected_cell:selectedArray[column-1][row-1] }" @click="changeStatus"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    var Counter = new Vue({
+        el: '#content',
+        data: {
+            inputedRows: "",
+            inputedColumns: "",
+            currentRows: 0,
+            currentColumns: 0,
+            selectedArray: [],
+            currentColor: 'lightgray',
+            countNumber: 0
+        },
+        methods: {
+            createCells: function () {
+                this.selectedArray.splice(0, this.selectedArray.length);//clear selectedArray
+                this.selectedArray = new Array(this.inputedRows);
+                for (var i = 0; i < this.inputedRows; i++) {
+                    this.selectedArray[i] = new Array(parseInt(this.inputedColumns));
+                }
+                this.currentRows = parseInt(this.inputedRows == "" ? 0 : this.inputedRows);
+                this.currentColumns = parseInt(this.inputedColumns == "" ? 0 : this.inputedColumns);
+            },
+            clearInput: function () {
+                this.inputedRows = "";
+                this.inputedColumns = "";
+            },
+            changeSelectedColor: function () {
+                console.log('current color is : ' + this.currentColor);
+                document.getElementsByTagName('style')[0].innerHTML = '.selected_cell {background-color: '+ this.currentColor +';}';
+            }, 
+            changeStatus: function () {
+                var x = event.target.getAttribute('col') - 1, y = event.target.getAttribute('row') - 1;
+                console.log(x + ' ' + y);
+                this.selectedArray[x][y] = this.selectedArray[x][y] ? false : true;
+                this.selectedArray.push(0);
+                this.selectedArray.pop();
+            },
+            countCell: function () {
+                var count = 0;
+                for (var i = 0; i < this.currentRows; i++) {
+                    for (var j = 0; j < this.currentColumns; j++) {
+                        if (this.selectedArray[i][j] == true) {
+                            count++;
+                        }
+                    }
+                }
+                this.countNumber = count;
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>
