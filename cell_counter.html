@@ -41,11 +41,11 @@
 
         <br>
 
-        <span>Number: {{countNumber}}</span>
+        <span>Sum: {{countNumber}}</span>
 
         <br>
 
-        <span>Selected Cells: </span>
+        <span>Selected Cells: <br>{{selectedCells}}</span>
 
     </div>
 
@@ -57,7 +57,10 @@
             </tr>
             <tr v-for="row in currentRows">
                 <td>{{row}}</td>
-                <td class="cell" v-for="column in currentColumns" :col="column" :row="row" :class="{ selected_cell:selectedArray[column-1][row-1] }" @click="changeStatus"></td>
+                <!--<td class="cell" v-for="column in currentColumns" :col="column" :row="row"
+                    :class="{ selected_cell:selectedArray[column-1][row-1] }" @click="changeStatus"></td>-->
+                <td class="cell" v-for="column in currentColumns" :col="column" :row="row"
+                    @click="changeStatus"></td>
             </tr>
         </table>
     </div>
@@ -75,15 +78,16 @@
             currentColumns: 0,
             selectedArray: [],
             currentColor: 'lightgray',
-            countNumber: 0
+            countNumber: 0,
+            selectedCells: ''
         },
         methods: {
             createCells: function () {
-                this.selectedArray.splice(0, this.selectedArray.length);//clear selectedArray
-                this.selectedArray = new Array(this.inputedRows);
-                for (var i = 0; i < this.inputedRows; i++) {
-                    this.selectedArray[i] = new Array(parseInt(this.inputedColumns));
-                }
+                // this.selectedArray.splice(0, this.selectedArray.length);//clear selectedArray
+                // this.selectedArray = new Array(this.inputedRows);
+                // for (var i = 0; i < this.inputedRows; i++) {
+                //     this.selectedArray[i] = new Array(parseInt(this.inputedColumns));
+                // }
                 this.currentRows = parseInt(this.inputedRows == "" ? 0 : this.inputedRows);
                 this.currentColumns = parseInt(this.inputedColumns == "" ? 0 : this.inputedColumns);
             },
@@ -93,25 +97,33 @@
             },
             changeSelectedColor: function () {
                 console.log('current color is : ' + this.currentColor);
-                document.getElementsByTagName('style')[0].innerHTML = '.selected_cell {background-color: '+ this.currentColor +';}';
-            }, 
+                document.getElementsByTagName('style')[0].innerHTML = '.selected_cell {background-color: ' + this.currentColor + ';}';
+            },
             changeStatus: function () {
                 var x = event.target.getAttribute('col') - 1, y = event.target.getAttribute('row') - 1;
                 console.log(x + ' ' + y);
-                this.selectedArray[x][y] = this.selectedArray[x][y] ? false : true;
-                this.selectedArray.push(0);
-                this.selectedArray.pop();
+                // this.selectedArray[x][y] = this.selectedArray[x][y] ? false : true;
+                // this.selectedArray.push(0);
+                // this.selectedArray.pop();
+                event.target.className = event.target.className == 'selected_cell' ? '' : 'selected_cell';
             },
             countCell: function () {
                 var count = 0;
+                var countArray = [];
                 for (var i = 0; i < this.currentRows; i++) {
                     for (var j = 0; j < this.currentColumns; j++) {
-                        if (this.selectedArray[i][j] == true) {
+                        if (this.selectedArray[i][j]) {
                             count++;
+                            countArray.push({x: i + 1, y: j + 1});
                         }
                     }
                 }
                 this.countNumber = count;
+                this.selectedCells = '';//initialization
+                for (var i in countArray) {
+                    this.selectedCells += i==0 ? '( ' + countArray[i].x + ' , ' + countArray[i].y + ' )' :  ' , ( ' + countArray[i].x + ' , ' + countArray[i].y + ' )' ;
+                }
+
             }
         }
     });
