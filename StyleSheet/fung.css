@@ -19,6 +19,16 @@ button {
     min-width: 400px;
 }
 
+.user_input_area {
+    height: 100%;
+    width: 300px;
+    position: fixed;
+    left: 0;
+    border-right: 1px solid gray;
+    background-color: #fff;
+    overflow: scroll;
+}
+
 .input_title {
     display: inline-block;
     width: 100px;
@@ -35,6 +45,8 @@ button {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    width: auto;
+    margin-left: 310px;
 }
 
 #cells_table {

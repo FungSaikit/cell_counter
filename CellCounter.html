@@ -14,17 +14,18 @@
 
 <div id="content">
 
-    <h1>Cell Counter</h1>
 
     <div class="user_input_area">
 
+        <h1>Cell Counter</h1>
+
         <span class="input_title">Rows:</span>
-        <input class="user_input" id="row_input" type="number" value="inputedRows">
+        <input class="user_input" id="row_input" type="number" value="inputedRows" onkeydown="enterListener()">
 
         <br>
 
         <span class="input_title">Columns:</span>
-        <input class="user_input" id="column_input" type="number" value="inputedColumns">
+        <input class="user_input" id="column_input" type="number" value="inputedColumns" onkeydown="enterListener()">
 
         <br>
 
@@ -34,11 +35,20 @@
 
         <br>
 
-        <span>Color: </span><input type="text" value="lightgray" onchange="changeSelectedColor(this)">
+        <span class="input_title">Color: </span>
+        <input class="user_input" type="text" value="lightgray" onchange="changeSelectedColor(this)" style="text-align: center;">
 
         <br>
 
-        <span>Sum: </span>
+        <span class="input_title">*Auto Count:</span>
+        <select onchange="useAutoCount(this)">
+            <option value="0">Disable</option>
+            <option value="1">Enable(worse performance)</option>
+        </select>
+
+        <br><br>
+
+        <span id="selected_number">Sum: </span>
 
         <br>
 
@@ -47,66 +57,14 @@
     </div>
 
     <div class="cells_area">
-        <table id="cells_table">
+        <table id="cells_table" onmouseup="turnOffEditMode()">
 
         </table>
     </div>
 
 </div>
-<script type="text/javascript">
 
-    var rowsInput = document.getElementById('row_input');
-    var columnsInput = document.getElementById('column_input');
-    var cellsTable = document.getElementById('cells_table');
-    var style = document.getElementById('current_style');
-
-    function clearInput() {
-        rowsInput.value = '';
-        columnsInput.value = '';
-    }
-
-    function createCells() {
-        var columns = columnsInput.value;
-        var rows = rowsInput.value;
-        cellsTable.innerHTML = "";
-        var tableContent = ''
-        tableContent += '<tr>';
-        for (var i = 0; i <= columns; i++) {
-            tableContent += '<td>' + i + '</td>'
-        }
-        tableContent += '</tr>';
-
-        for (var i = 0; i < rows; i++) {
-            tableContent += '<tr><td>' + (i + 1) + '</td>';
-            for (var j = 0; j < columns; j++) {
-                tableContent += '<td class="cell" row="' + (i+1) + '" column="' + (j+1) + '" onclick="selectCell(this)"></td>'
-            }
-            tableContent += '</tr>';
-        }
-
-        cellsTable.innerHTML += tableContent;
-    }
-
-    function selectCell(object) {
-        object.className = object.className == 'cell selected_cell' ? 'cell' : 'cell selected_cell';
-    }
-
-    function countCells() {
-        var allCells = document.getElementsByClassName('cell');
-        var selectedCellElement = document.getElementById('selected_cells');
-        selectedCellElement.innerHTML = 'Selected Cells: <br>';
-        for (var i = 0; i < allCells.length; i++) {
-            if (allCells[i].className.indexOf('selected_cell') >= 0) {
-                selectedCellElement.innerHTML += ' ( ' + allCells[i].getAttribute('column') + ' , ' + allCells[i].getAttribute('row') + ' ) ';
-            }
-        }
-    }
-
-    function changeSelectedColor(object) {
-        style.innerHTML = '.selected_cell {background-color: ' + object.value + ';}'
-    }
-
-</script>
+<script type="text/javascript" src="JavaScript/fung.js"></script>
 
 </body>
 </html>
