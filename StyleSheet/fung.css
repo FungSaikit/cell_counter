@@ -55,14 +55,17 @@ button {
     display: inline-block;
 }
 
-#cells_table td {
-    width: 20px;
-    min-width: 20px;
-    max-width: 20px;
-    height: 20px;
-    font-size: 0.5rem;
-}
-
 .cell {
     border: 1px solid dimgray;
+}
+
+.zoom {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 15px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    cursor: pointer;
 }
